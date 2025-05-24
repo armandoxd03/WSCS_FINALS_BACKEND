@@ -9,35 +9,13 @@ const cartRoutes = require("./routes/cartRoutes");
 const PORT = 4000;
 
 mongoose.connect("mongodb+srv://admin:admin123@ua-database.2knwv70.mongodb.net/ecommerceDB?retryWrites=true&w=majority");
-
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB.'));
 
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://wscs-finals-frontend.vercel.app'
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log('🚫 CORS blocked for origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+// Allow all origins for development/testing
+app.use(cors({ origin: true, credentials: true }));
+app.options('*', cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,20 +29,12 @@ app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date(),
-    allowedOrigins: allowedOrigins
+    message: 'CORS is set to allow all origins (dev mode)'
   });
 });
 
 app.use((err, req, res, next) => {
   console.error('🔥 Error:', err.stack);
-  if (err.message === 'Not allowed by CORS') {
-    return res.status(403).json({
-      error: 'CORS policy: Access denied',
-      message: `Origin not allowed. Please use one of: ${allowedOrigins.join(', ')}`,
-      yourOrigin: req.get('origin'),
-      status: 403
-    });
-  }
   res.status(500).json({
     error: 'Internal Server Error',
     message: 'Something broke!',
@@ -74,7 +44,7 @@ app.use((err, req, res, next) => {
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`🚀 Server running on port ${process.env.PORT || PORT}`);
-  console.log('✅ Allowed CORS origins:', allowedOrigins);
+  console.log('🌐 CORS: Allowing all origins (development mode)');
   console.log('🔗 Health check endpoint: /health');
 });
 
