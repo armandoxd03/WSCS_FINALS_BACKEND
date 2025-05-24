@@ -6,14 +6,15 @@ const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
-mongoose.connect("mongodb+srv://admin:admin123@ua-database.2knwv70.mongodb.net/ecommerceDB?retryWrites=true&w=majority");
+// Mongoose connect
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://admin:admin123@ua-database.2knwv70.mongodb.net/ecommerceDB?retryWrites=true&w=majority");
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB.'));
 
 const app = express();
 
-// Allow all origins for development/testing
+// Allow all origins for development and testing
 app.use(cors({ origin: true, credentials: true }));
 app.options('*', cors({ origin: true, credentials: true }));
 
@@ -42,8 +43,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT || PORT, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT || PORT}`);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
   console.log('🌐 CORS: Allowing all origins (development mode)');
   console.log('🔗 Health check endpoint: /health');
 });
