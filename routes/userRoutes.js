@@ -12,6 +12,7 @@ router.get('/details', auth.verify, userController.getProfile);
 router.patch('/update-profile', auth.verify, userController.updateProfile);
 router.patch('/reset-password', auth.verify, userController.resetPassword);
 router.post('/check-email', userController.checkEmailExists);
+router.post('/check-mobile', userController.checkMobileExists);
 
 // Admin routes
 router.patch('/:id/set-as-admin', auth.verify, auth.verifyAdmin, userController.setAsAdmin);
