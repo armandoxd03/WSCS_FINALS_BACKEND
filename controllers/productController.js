@@ -119,7 +119,7 @@ module.exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Unified Search: name/description, price filter, sort, priceOrder, nameOrder
+// Search: name/description, price filter, sort, priceOrder, nameOrder
 // POST /products/search { query, minPrice, maxPrice, sortBy, priceOrder, nameOrder }
 module.exports.searchProducts = async (req, res) => {
     try {
